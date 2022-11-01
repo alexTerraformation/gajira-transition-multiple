@@ -23,6 +23,6 @@ jobs:
     - name: Transition issue
       uses: ./
       with:
-        issueList: ./jiras-completed.log
+        issueList: ./jiras-completed.txt
         transition: "Released to Production"
 
