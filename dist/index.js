@@ -27,7 +27,7 @@ module.exports = class {
     const { argv } = this
 
     console.log('Parsing file now')
-    const issueListPath = `${process.env.HOME}/${argv.issueList}`
+    const issueListPath = `${process.env.GITHUB_WORKSPACE}/${argv.issueList}`
     const fileContents = fs.readFileSync(issueListPath, 'utf-8')
     const arr = fileContents.split(/\r?\n/)
 
