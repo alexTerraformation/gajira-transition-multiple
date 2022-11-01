@@ -17,8 +17,14 @@ module.exports = class {
   async execute () {
     const { argv } = this
 
-    const issueId = argv.issue
-    const { transitions } = await this.Jira.getIssueTransitions(issueId)
+    const issueList = argv.issueList
+    const fs = require('fs');
+    const fileContents = fs.readFileSync(issueList, 'utf-8')
+    const arr = contents.split(/\r?\n/)
+
+    console.log(`Read array of issues: ${arr}`)
+
+    const { transitions } = await this.Jira.getIssueTransitions(arr[0])
 
     const transitionToApply = _.find(transitions, (t) => {
       if (t.id === argv.transitionId) return true

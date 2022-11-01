@@ -21,6 +21,6 @@ jobs:
     - name: Transition issue
       uses: ./
       with:
-        issue: SW-2072
+        issueList: ./jiras-completed.log
         transition: "Released to Production"
 
