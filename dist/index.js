@@ -12,8 +12,6 @@ const fs = __nccwpck_require__(7147);
 
 module.exports = class {
   constructor ({ githubEvent, argv, config }) {
-
-    core.info('Parsing file now2')
     this.Jira = new Jira({
       baseUrl: config.baseUrl,
       token: config.token,
@@ -29,9 +27,9 @@ module.exports = class {
     const { argv } = this
 
     console.log('Parsing file now')
-    const issueList = argv.issueList
-    const fileContents = fs.readFileSync(issueList, 'utf-8')
-    const arr = contents.split(/\r?\n/)
+    const issueListPath = `${process.env.HOME}/${argv.issueList}`
+    const fileContents = fs.readFileSync(issueListPath, 'utf-8')
+    const arr = fileContents.split(/\r?\n/)
 
     console.log(`Read array of issues: ${arr}`)
 
@@ -30842,8 +30840,6 @@ const config = YAML.parse(fs.readFileSync(configPath, 'utf8'))
 
 async function exec () {
   try {
-
-    console.log('Parsing file now3')
     const result = await new Action({
       githubEvent,
       argv: parseArgs(),

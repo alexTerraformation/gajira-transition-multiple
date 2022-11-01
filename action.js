@@ -6,8 +6,6 @@ const fs = require('fs');
 
 module.exports = class {
   constructor ({ githubEvent, argv, config }) {
-
-    core.info('Parsing file now2')
     this.Jira = new Jira({
       baseUrl: config.baseUrl,
       token: config.token,
@@ -23,9 +21,9 @@ module.exports = class {
     const { argv } = this
 
     console.log('Parsing file now')
-    const issueList = argv.issueList
-    const fileContents = fs.readFileSync(issueList, 'utf-8')
-    const arr = contents.split(/\r?\n/)
+    const issueListPath = `${process.env.HOME}/${argv.issueList}`
+    const fileContents = fs.readFileSync(issueListPath, 'utf-8')
+    const arr = fileContents.split(/\r?\n/)
 
     console.log(`Read array of issues: ${arr}`)
 
