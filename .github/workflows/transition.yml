@@ -9,7 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@jira-action
+      uses: actions/checkout@v3
+      with:
+        ref: jira-action
 
     - name: Login
       uses: atlassian/gajira-login@master
