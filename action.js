@@ -22,12 +22,12 @@ module.exports = class {
   async execute () {
     const { argv } = this
 
-    core.info('Parsing file now')
+    console.log('Parsing file now')
     const issueList = argv.issueList
     const fileContents = fs.readFileSync(issueList, 'utf-8')
     const arr = contents.split(/\r?\n/)
 
-    core.info(`Read array of issues: ${arr}`)
+    console.log(`Read array of issues: ${arr}`)
 
     const { transitions } = await this.Jira.getIssueTransitions(arr[0])
 
