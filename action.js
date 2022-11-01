@@ -6,6 +6,8 @@ const fs = require('fs');
 
 module.exports = class {
   constructor ({ githubEvent, argv, config }) {
+
+    core.info('Parsing file now2')
     this.Jira = new Jira({
       baseUrl: config.baseUrl,
       token: config.token,
