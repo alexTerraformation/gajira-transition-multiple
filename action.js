@@ -1,5 +1,8 @@
+const { countReset } = require('console')
 const _ = require('lodash')
 const Jira = require('./common/net/Jira')
+const core = require('@actions/core')
+const fs = require('fs');
 
 module.exports = class {
   constructor ({ githubEvent, argv, config }) {
@@ -17,13 +20,12 @@ module.exports = class {
   async execute () {
     const { argv } = this
 
-    console.log('Parsing file now')
+    core.info('Parsing file now')
     const issueList = argv.issueList
-    const fs = require('fs');
     const fileContents = fs.readFileSync(issueList, 'utf-8')
     const arr = contents.split(/\r?\n/)
 
-    console.log(`Read array of issues: ${arr}`)
+    core.info(`Read array of issues: ${arr}`)
 
     const { transitions } = await this.Jira.getIssueTransitions(arr[0])
 
