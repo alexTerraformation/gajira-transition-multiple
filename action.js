@@ -17,6 +17,7 @@ module.exports = class {
   async execute () {
     const { argv } = this
 
+    console.log('Parsing file now')
     const issueList = argv.issueList
     const fs = require('fs');
     const fileContents = fs.readFileSync(issueList, 'utf-8')
