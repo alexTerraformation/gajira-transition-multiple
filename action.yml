@@ -4,8 +4,8 @@ branding:
   icon: 'chevron-right'
   color: 'blue'
 inputs:
-  issue:
-    description: Key of the issue to be transitioned
+  issueList:
+    description: File of issue keys to be transitioned
     required: true
   transition:
     description: The transition to apply to the issue, e.g. 'In Progress'

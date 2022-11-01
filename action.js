@@ -1,5 +1,8 @@
+const { countReset } = require('console')
 const _ = require('lodash')
 const Jira = require('./common/net/Jira')
+const core = require('@actions/core')
+const fs = require('fs');
 
 module.exports = class {
   constructor ({ githubEvent, argv, config }) {
@@ -17,37 +20,45 @@ module.exports = class {
   async execute () {
     const { argv } = this
 
-    const issueId = argv.issue
-    const { transitions } = await this.Jira.getIssueTransitions(issueId)
+    console.log('Parsing file now')
+    const issueListPath = `${process.env.GITHUB_WORKSPACE}/${argv.issueList}`
+    const fileContents = fs.readFileSync(issueListPath, 'utf-8')
+    const arr = fileContents.split(/\r?\n/)
 
-    const transitionToApply = _.find(transitions, (t) => {
-      if (t.id === argv.transitionId) return true
-      if (t.name.toLowerCase() === argv.transition.toLowerCase()) return true
-    })
+    console.log(`Read array of issues: ${arr}`)
 
-    if (!transitionToApply) {
-      console.log('Please specify transition name or transition id.')
-      console.log('Possible transitions:')
-      transitions.forEach((t) => {
-        console.log(`{ id: ${t.id}, name: ${t.name} } transitions issue to '${t.to.name}' status.`)
+    for(const issueId of arr){
+      const { transitions } = await this.Jira.getIssueTransitions(issueId)
+
+      const transitionToApply = _.find(transitions, (t) => {
+        if (t.id === argv.transitionId) return true
+        if (t.name.toLowerCase() === argv.transition.toLowerCase()) return true
       })
 
-      return
+      if (!transitionToApply) {
+        console.log('Please specify transition name or transition id.')
+        console.log('Possible transitions:')
+        transitions.forEach((t) => {
+          console.log(`{ id: ${t.id}, name: ${t.name} } transitions issue to '${t.to.name}' status.`)
+        })
+
+        continue
+      }
+
+      console.log(`Selected transition:${JSON.stringify(transitionToApply, null, 4)}`)
+
+      await this.Jira.transitionIssue(issueId, {
+        transition: {
+          id: transitionToApply.id,
+        },
+      })
+
+      const transitionedIssue = await this.Jira.getIssue(issueId)
+
+      // console.log(`transitionedIssue:${JSON.stringify(transitionedIssue, null, 4)}`)
+      console.log(`Changed ${issueId} status to : ${_.get(transitionedIssue, 'fields.status.name')} .`)
+      console.log(`Link to issue: ${this.config.baseUrl}/browse/${issueId}`)
     }
-
-    console.log(`Selected transition:${JSON.stringify(transitionToApply, null, 4)}`)
-
-    await this.Jira.transitionIssue(issueId, {
-      transition: {
-        id: transitionToApply.id,
-      },
-    })
-
-    const transitionedIssue = await this.Jira.getIssue(issueId)
-
-    // console.log(`transitionedIssue:${JSON.stringify(transitionedIssue, null, 4)}`)
-    console.log(`Changed ${issueId} status to : ${_.get(transitionedIssue, 'fields.status.name')} .`)
-    console.log(`Link to issue: ${this.config.baseUrl}/browse/${issueId}`)
 
     return {}
   }

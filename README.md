@@ -1,7 +1,8 @@
-# Jira Transition
-Transition Jira issue
+# Multiple Jira Transition
+Transition Multiple Jira issues
 
-For examples on how to use this, check out the [gajira-demo](https://github.com/atlassian/gajira-demo) repository
+Forked from the original jira transition action [gajira-transition](https://github.com/atlassian/gajira-transition) repository
+Updated to add support to transition multiple Jira issues per job
 > ##### Only supports Jira Cloud. Does not support Jira Server (hosted)
 
 ## Usage
@@ -14,15 +15,13 @@ Example transition action:
 
 ```yaml
 - name: Transition issue
-  id: transition
-  uses: atlassian/gajira-transition@master
+  uses: ./
   with:
-    issue: GA-181
-    transition: "In progress"
-}
+    issueList: ./jiras-completed.txt
+    transition: "Released to Production"
 ```
 
-The `issue` parameter can be an issue id created or retrieved by an upstream action – for example, [`Create`](https://github.com/marketplace/actions/jira-create) or [`Find Issue Key`](https://github.com/marketplace/actions/jira-find). Here is full example workflow:
+The `issueList` parameter is a file containing a list of one or more Jira keys to transition (for an example see `jiras-completed.txt`)
 
 ```yaml
 on:
@@ -47,10 +46,10 @@ jobs:
       uses: atlassian/gajira-create@master
 
     - name: Transition issue
-      uses: atlassian/gajira-transition@master
+      uses: ./
       with:
-        issue: ${{ steps.create.outputs.issue }}
-        transition: "In progress"
+        issueList: ./jiras-completed.txt
+        transition: "In Progress"
 ```
 ----
 ## Action Spec:
@@ -59,16 +58,9 @@ jobs:
 - None
 
 ### Inputs
-- `issue` (required) - issue key to perform a transition on
+- `issueList` (required) - file containing a list of issue keys to perform a transition on
 - `transition` - Case insensetive name of transition to apply. Example: `Cancel` or `Accept`
 - `transitionId` - transition id to apply to an issue
 
 ### Outputs
-- None
-
-### Reads fields from config file at $HOME/jira/config.yml
-- `issue`
-- `transitionId`
-
-### Writes fields to config file at $HOME/jira/config.yml
 - None
