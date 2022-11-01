@@ -33,7 +33,7 @@ module.exports = class {
 
     console.log(`Read array of issues: ${arr}`)
 
-    for(issueId in arr){
+    for(const issueId in arr){
       const { transitions } = await this.Jira.getIssueTransitions(issueId)
 
       const transitionToApply = _.find(transitions, (t) => {
