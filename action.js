@@ -28,6 +28,10 @@ module.exports = class {
     console.log(`Read array of issues: ${arr}`)
 
     for(const issueId of arr){
+
+      if(!(/[A-Z][A-Z]+-[0-9]+/.test(issueId))){
+        continue
+      }
       const { transitions } = await this.Jira.getIssueTransitions(issueId)
 
       const transitionToApply = _.find(transitions, (t) => {
